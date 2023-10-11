@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('express-async-errors')
 const express = require('express')
 const cors = require('cors')
 const { connectDB } = require('./db/connectDB')
@@ -11,6 +12,7 @@ const authRouter = require('./routes/auth')
 
 // Middleware
 const notFoundMiddleware = require('./middleware/not-found')
+const errorHandler = require('./middleware/error-handler')
 
 const corsOptions = {
     origin: 'https://localhost:5050'
@@ -23,7 +25,10 @@ app.use('/api/v1/auth', authRouter)
 app.get('/', (req, res) => {
     res.status(200).json({ msg: 'Hello World' })
 })
+
+app.use(errorHandler)
 app.use(notFoundMiddleware)
+
 
 const PORT = process.env.PORT || 5050
 const start = async () => {
