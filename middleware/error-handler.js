@@ -10,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
 
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res
-        .status(StatusCodes.BAD_REQUEST)
+        .status(StatusCodes.CONFLICT)
         .json({ msg: `${err.fields.email} already exists`})
     }
 
