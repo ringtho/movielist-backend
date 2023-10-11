@@ -2,9 +2,18 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 
+// Routers
+const authRouter = require('./routes/auth')
+
+// Middleware
+const notFoundMiddleware = require('./middleware/not-found')
+
+app.use(express.json())
+app.use('/api/v1/auth', authRouter)
 app.get('/', (res, req) => {
     res.statusCode(200).json({ msg: 'Hello World' })
 })
+app.use(notFoundMiddleware)
 
 const PORT = process.env.PORT || 5050
 app.listen(PORT, () => {
