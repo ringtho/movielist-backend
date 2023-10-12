@@ -8,8 +8,11 @@ const getAllMovies = async (req, res) => {
     res.status(StatusCodes.OK).json({ movies, success: true })
 }
 
-const createMovie = (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: 'Create movies' })
+const createMovie = async (req, res) => {
+  const data = req.body
+  data.createdBy = req.user.id
+  const movie = await Movie.create( data)
+  res.status(StatusCodes.OK).json({ movie, success: true })
 }
 
 const getSingleMovie = async (req, res) => {
