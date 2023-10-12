@@ -1,9 +1,10 @@
 const express = require('express')
-const { getUser, updateUser } = require('../controllers/users')
+const { getUser, updatePassword } = require('../controllers/users')
 const router = express.Router()
 
 router.route('/')
     .get(getUser)
-    .patch(updateUser)
+
+router.patch('/update-password', updatePassword)
 
 module.exports = router
