@@ -25,6 +25,10 @@ const User = sequelize.define('user', {
         validate: {
             notEmpty: true
         }
+    },
+    profileImg: {
+        type: DataTypes.STRING,
+        defaultValue: ""
     }
 })
 
@@ -33,6 +37,6 @@ User.beforeCreate(async (user) => {
     user.password = await bcrypt.hash(user.password, salt)
 })
 
-// User.sync({ force: false })
+// User.sync({ force: true })
 
 module.exports = User

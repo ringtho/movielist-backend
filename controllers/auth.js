@@ -17,8 +17,8 @@ const login = async (req, res) => {
     if (!match) {
         throw new UnAuthorizedError('Invalid Credentials')
     }
-    const token = await jwt.sign(
-        { id: user.id, name: user.name }, 
+    const token =  jwt.sign(
+        { id: user.id }, 
         process.env.JWT_SECRET, 
         { expiresIn: process.env.JWT_DURATION }
     )

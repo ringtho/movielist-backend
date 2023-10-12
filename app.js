@@ -9,10 +9,12 @@ const app = express()
 
 // Routers
 const authRouter = require('./routes/auth')
+const usersRouter = require('./routes/users')
 
 // Middleware
 const notFoundMiddleware = require('./middleware/not-found')
 const errorHandler = require('./middleware/error-handler')
+const authMiddleware = require('./middleware/authentication')
 
 const corsOptions = {
     origin: 'https://localhost:5050'
@@ -22,6 +24,7 @@ app.use(express.json())
 
 
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/user', authMiddleware, usersRouter)
 app.get('/', (req, res) => {
     res.status(200).json({ msg: 'Hello World' })
 })

@@ -7,7 +7,6 @@ const authenticateUser = (req, res, next) => {
         throw new UnAuthorizedError('Authentication Invalid')
     }
     const token = authHeader.split(" ")[1]
-    console.log(token)
     try {
         const { email, id } = jwt.verify(token, process.env.JWT_SECRET)
         req.user = { email , id }
