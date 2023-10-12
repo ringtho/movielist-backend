@@ -10,6 +10,7 @@ const app = express()
 // Routers
 const authRouter = require('./routes/auth')
 const usersRouter = require('./routes/users')
+const moviesRouter = require('./routes/movies')
 
 // Middleware
 const notFoundMiddleware = require('./middleware/not-found')
@@ -25,6 +26,7 @@ app.use(express.json())
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/user', authMiddleware, usersRouter)
+app.use('/api/v1/movies', authMiddleware, moviesRouter)
 app.get('/', (req, res) => {
     res.status(200).json({ msg: 'Hello World' })
 })
