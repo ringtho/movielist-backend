@@ -30,6 +30,10 @@ const Movie = sequelize.define('movie', {
         notEmpty: true
     }
   },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
   rating: {
     type: DataTypes.FLOAT
   },
@@ -41,6 +45,6 @@ const Movie = sequelize.define('movie', {
   }
 })
 
-Movie.sync({ force: true })
+// Movie.sync({ force: true })
 
 module.exports = Movie
