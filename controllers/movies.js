@@ -3,7 +3,7 @@ const Movie = require("../models/movies")
 const { NotFoundError, BadRequestError } = require("../errors")
 const cloudinary = require('../utils/cloudinary')
 const upload = require('../utils/multer')
-const { validationResult, matchedData } = require('express-validator')
+// const { validationResult, matchedData } = require('express-validator')
 
 const getAllMovies = async (req, res) => {
     const { id } = req.user
