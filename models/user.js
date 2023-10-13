@@ -27,8 +27,10 @@ const User = sequelize.define('user', {
         }
     },
     profileImg: {
-        type: DataTypes.STRING,
-        defaultValue: ""
+        type: DataTypes.STRING
+    },
+    cloudinaryId: {
+        type: DataTypes.STRING
     }
 })
 

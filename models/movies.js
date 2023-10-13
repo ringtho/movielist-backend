@@ -42,6 +42,9 @@ const Movie = sequelize.define('movie', {
   },
   thumbnail: {
     type: DataTypes.STRING
+  },
+  cloudinaryId: {
+    type: DataTypes.STRING
   }
 })
 
