@@ -7,19 +7,29 @@ const upload = require('../utils/multer')
 
 const getAllMovies = async (req, res) => {
     const { id } = req.user
-    const movies = await Movie.findAll({ where : { createdBy: id }})
-    res.status(StatusCodes.OK).json({ movies, success: true })
+    const size = 5
+    const page = +req.query.page || 0
+    if (isNaN(page)) {
+      throw new BadRequestError('Page number should be a Number')
+    }
+    const movies = await Movie.findAndCountAll({ 
+      where: { createdBy: id },
+      limit: size,
+      offset: page * size
+    })
+    const pages = Math.ceil(movies.count / size)
+    res.status(StatusCodes.OK).json({ movies: movies.rows, pages, success: true })
 }
 
 const createMovie = async (req, res) => {
 //   const errors  = validationResult(req.body)
 //   console.log(errors)
 //   if (errors.isEmpty()){
-    const result = await cloudinary.uploader.upload(req?.file?.path)
+    // const result = await cloudinary.uploader.upload(req?.file?.path)
     const data = req.body
     data.createdBy = req.user.id
-    data.thumbnail = result.secure_url
-    data.cloudinaryId = result.public_id
+    // data.thumbnail = result.secure_url
+    // data.cloudinaryId = result.public_id
     const movie = await Movie.create(data)
     res.status(StatusCodes.OK).json({ movie, success: true })
 //   }
