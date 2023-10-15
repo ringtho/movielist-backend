@@ -12,9 +12,19 @@ const sequelize = new Sequelize(
 const connectDB = async () => {
     try {
         await sequelize.authenticate()
+        await sequelize.sync()
     } catch (error) {
         console.log(error)
     }
 }
+
+// try {
+  
+//   console.log('Successfully re-synced')
+// } catch (error) {
+//   console.log(error)
+// }
+
+
 
 module.exports = { connectDB, sequelize }

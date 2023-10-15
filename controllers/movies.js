@@ -29,7 +29,9 @@ const createMovie = async (req, res) => {
 
 const getSingleMovie = async (req, res) => {
   const { user: { id: userId }, params: { id }} = req
-  const movie = await Movie.findOne({ where: { id , createdBy: userId }})
+  const movie = await Movie.findOne({ 
+    where: { id: parseInt(id) ,createdBy: userId }
+  })
   if (!movie) {
     throw new NotFoundError(`Movie with id ${id} not found`)
   }
@@ -43,7 +45,7 @@ const updateMovie = async (req, res) => {
   }
   const [rowCount] = await Movie.update(
     req.body, 
-    { where: { id, createdBy: userId}})
+    { where: { id: parseInt(id), createdBy: userId}})
   if(rowCount === 0) {
     throw new NotFoundError(`Movie with id ${id} not found`)
   }
@@ -53,7 +55,9 @@ const updateMovie = async (req, res) => {
 
 const deleteMovie = async (req, res) => {
   const { user: { id: userId }, params: { id }} = req
-  const movie = await Movie.destroy({ where: { id , createdBy: userId }})
+  const movie = await Movie.destroy({ 
+    where: { id: parseInt(id) , createdBy: userId }
+  })
   if (!movie) {
     throw new NotFoundError(`Movie with id ${id} not found`)
   }

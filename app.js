@@ -18,7 +18,7 @@ const errorHandler = require('./middleware/error-handler')
 const authMiddleware = require('./middleware/authentication')
 
 const corsOptions = {
-    origin: 'https://localhost:5050'
+  origin: 'http://localhost:3000'
 }
 app.use(cors(corsOptions))
 app.use(express.json())
