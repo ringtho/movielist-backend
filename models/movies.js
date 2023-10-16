@@ -45,6 +45,10 @@ const Movie = sequelize.define('movie', {
   },
   cloudinaryId: {
     type: DataTypes.STRING
+  },
+  favorited: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 })
 
