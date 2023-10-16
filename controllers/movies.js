@@ -15,10 +15,15 @@ const getAllMovies = async (req, res) => {
     const movies = await Movie.findAndCountAll({ 
       where: { createdBy: id },
       limit: size,
-      offset: page * size
+      offset: page * size,
+      order: [[ 'favorited', 'DESC' ]]
     })
     const pages = Math.ceil(movies.count / size)
-    res.status(StatusCodes.OK).json({ movies: movies.rows, pages, success: true })
+    res.status(StatusCodes.OK).json({ 
+      movies: movies.rows, 
+      pages, 
+      success: true 
+    })
 }
 
 const getMovies = async (req, res) => {
