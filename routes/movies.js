@@ -10,15 +10,16 @@ const {
 } = require('../controllers/movies')
 const router = express.Router()
 const upload = require('../utils/multer')
-// const { movieValidator } = require('../utils/validation')
 
-router.get('/', getAllMovies)
-// router.post('/', createMovie)
+router.route('/')
+  .get(getAllMovies)
+  .post(upload.single('image'), createMovie)
+
 router.get('/all', getMovies)
-router.post('/', upload.single('thumbnail'), createMovie)
+
 router.route('/:id')
     .get(getSingleMovie)
-    .put(updateMovie)
+    .put(upload.single('image'), updateMovie)
     .delete(deleteMovie)
 
 router.route('/:id/favorite')

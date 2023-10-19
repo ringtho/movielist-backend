@@ -1,9 +1,11 @@
 const { StatusCodes } = require("http-status-codes")
 const Movie = require("../models/movies")
 const { NotFoundError, BadRequestError } = require("../errors")
-const upload = require('../utils/multer')
+const fs = require('fs')
 
-// Returns movies with pagination - size = 10
+/**
+ * Returns all movies returning 10 movies 
+ */
 const getAllMovies = async (req, res) => {
     const { id } = req.user
     const size = +req.query.size || 0
@@ -11,11 +13,11 @@ const getAllMovies = async (req, res) => {
     if (isNaN(page)) {
       throw new BadRequestError('Page number should be a Number')
     }
-    const movies = await Movie.findAndCountAll({ 
+    const movies = await Movie.findAndCountAll({
       where: { createdBy: id },
       limit: size,
       offset: page * size,
-      order: [[ 'favorited', 'DESC' ]]
+      order: [['favorited', 'DESC'], ['updatedAt', 'DESC']],
     })
     const pages = Math.ceil(movies.count / size)
     res.status(StatusCodes.OK).json({ 
@@ -25,6 +27,9 @@ const getAllMovies = async (req, res) => {
     })
 }
 
+/**
+ * Returns all movies with no pagination 
+ */
 const getMovies = async (req, res) => {
   const { id } = req.user
   const movies = await Movie.findAll({ 
@@ -33,19 +38,26 @@ const getMovies = async (req, res) => {
   res.status(StatusCodes.OK).json({ movies, success: true })
 }
 
+/**
+ * Creates a new movie
+ */
 const createMovie = async (req, res) => {
     const data = req.body
     data.createdBy = req.user.id
-    data.thumbnail = req.file?.path || ''
-    console.log(data)
+    if(req.file) {
+      data.thumbnail = req.file?.path
+    }
     const movie = await Movie.create(data)
     res.status(StatusCodes.CREATED).json({ movie, success: true })
 }
 
+/**
+ * Returns a single movie by id provided 
+ */
 const getSingleMovie = async (req, res) => {
   const { user: { id: userId }, params: { id }} = req
   const movie = await Movie.findOne({ 
-    where: { id, createdBy: userId }
+    where: { id: parseInt(id), createdBy: userId }
   })
   if (!movie) {
     throw new NotFoundError(`Movie with id ${id} not found`)
@@ -53,14 +65,25 @@ const getSingleMovie = async (req, res) => {
   res.status(StatusCodes.OK).json({ movie, success: true })
 }
 
+/**
+ * Updates a movie using the id of the movie and the id of the
+ * person who posted the movie
+ */
 const updateMovie = async (req, res) => {
   const { user: { id: userId }, params: { id }} = req
   if (JSON.stringify(req.body) === '{}') {
     throw new BadRequestError('Please provide a field to update')
   }
+  const data = req.body
+  if (req.file) {
+    fs.unlink(data.thumbnail, (error) => {
+      if (error) console.log(error)
+    })
+    data.thumbnail = req.file?.path
+  }
   const [rowCount] = await Movie.update(
-    req.body, 
-    { where: { id, createdBy: userId }})
+    data, 
+    { where: { id: parseInt(id), createdBy: userId }})
   if(rowCount === 0) {
     throw new NotFoundError(`Movie with id ${id} not found`)
   }
@@ -68,19 +91,23 @@ const updateMovie = async (req, res) => {
   res.status(StatusCodes.OK).json({ movie, success: true })
 }
 
+
+/**
+ * Updates whether a movie is favorite or not using the movie id
+ * and the user id
+ */
 const updateFavorite = async (req, res) => {
   const {
     user: { id: userId },
     params: { id },
   } = req
   const favorited = req.body.favorited
-  console.log(favorited)
   if (JSON.stringify(req.body) === '{}') {
     throw new BadRequestError('Please provide the favorite option')
   }
   const [rowCount] = await Movie.update(
     { favorited },
-    { where: { id, createdBy: userId } }
+    { where: { id: parseInt(id), createdBy: userId } }
   )
   if (rowCount === 0) {
     throw new NotFoundError(`Movie with id ${id} not found`)
@@ -90,14 +117,24 @@ const updateFavorite = async (req, res) => {
     success: true })
 }
 
+/**
+ * Deletes a movie using the movie id
+ * and the user id
+ */
 const deleteMovie = async (req, res) => {
   const { user: { id: userId }, params: { id }} = req
-  const movie = await Movie.destroy({ 
-    where: { id: parseInt(id) , createdBy: userId }
+  const movie = await Movie.findOne({
+    where: { id: parseInt(id), createdBy: userId },
   })
   if (!movie) {
     throw new NotFoundError(`Movie with id ${id} not found`)
   }
+  fs.unlink(movie.thumbnail, (error) => {
+    if (error) console.log(error)
+  })
+  await Movie.destroy({ 
+    where: { id: parseInt(id) , createdBy: userId }
+  })
   res.status(StatusCodes.OK).json({ 
     msg: `Successfully deleted movie with id ${id}`, 
     success: true 

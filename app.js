@@ -37,6 +37,9 @@ app.use(errorHandler)
 app.use(notFoundMiddleware)
 
 
+/**
+ * Function to connect to DB and start the server
+ */
 const PORT = process.env.PORT || 5050
 const start = async () => {
     try {
