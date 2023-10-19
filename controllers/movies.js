@@ -66,6 +66,34 @@ const getSingleMovie = async (req, res) => {
 }
 
 /**
+ * Deletes a movie thumbnail
+ */
+const deleteMovieThumbnail = async (req, res) => {
+  const {
+    user: { id: userId },
+    params: { id },
+  } = req
+  const movie = await Movie.findOne({
+    where: { id: parseInt(id), createdBy: userId },
+  })
+  if (!movie) {
+    throw new NotFoundError(`Movie with id ${id} not found`)
+  }
+  fs.unlink(movie.thumbnail, (error) => {
+    if (error) console.log(error)
+  })
+  await Movie.update(
+    { thumbnail: null}, 
+    { where: { id: parseInt(id), createdBy: userId } 
+  })
+
+  res.status(StatusCodes.OK).json({ 
+    msg: "Successfully removed the thumbnail", 
+    success: true 
+  })
+}
+
+/**
  * Updates a movie using the id of the movie and the id of the
  * person who posted the movie
  */
@@ -75,11 +103,13 @@ const updateMovie = async (req, res) => {
     throw new BadRequestError('Please provide a field to update')
   }
   const data = req.body
-  if (req.file) {
+  if (req.file?.path) {
     fs.unlink(data.thumbnail, (error) => {
       if (error) console.log(error)
     })
     data.thumbnail = req.file?.path
+  } else if (req.body.thumbnail === "null") {
+    data.thumbnail = null
   }
   const [rowCount] = await Movie.update(
     data, 
@@ -90,7 +120,6 @@ const updateMovie = async (req, res) => {
   const movie = await Movie.findOne({ where: { id } })
   res.status(StatusCodes.OK).json({ movie, success: true })
 }
-
 
 /**
  * Updates whether a movie is favorite or not using the movie id
@@ -129,9 +158,11 @@ const deleteMovie = async (req, res) => {
   if (!movie) {
     throw new NotFoundError(`Movie with id ${id} not found`)
   }
-  fs.unlink(movie.thumbnail, (error) => {
-    if (error) console.log(error)
-  })
+  if(movie.thumbnail) {
+     fs.unlink(movie.thumbnail, (error) => {
+       if (error) console.log(error)
+     })
+  }
   await Movie.destroy({ 
     where: { id: parseInt(id) , createdBy: userId }
   })
@@ -148,5 +179,6 @@ module.exports = {
     updateMovie,
     deleteMovie,
     getMovies,
-    updateFavorite
+    updateFavorite,
+    deleteMovieThumbnail
 }
