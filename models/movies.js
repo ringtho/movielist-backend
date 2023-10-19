@@ -20,35 +20,36 @@ const Movie = sequelize.define('movie', {
     type: DataTypes.TEXT,
     allowNull: false,
     validate: {
-        notEmpty: true
+        notEmpty: true,
     }
   },
   releaseDate: {
     type: DataTypes.DATEONLY,
     allowNull: false,
     validate: {
-        notEmpty: true
+        notEmpty: true,
     }
   },
   createdBy: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
   rating: {
-    type: DataTypes.FLOAT
+    type: DataTypes.FLOAT,
   },
   notes: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   thumbnail: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   cloudinaryId: {
     type: DataTypes.STRING
   },
   favorited: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
+    defaultValue: false,
   }
 })
 

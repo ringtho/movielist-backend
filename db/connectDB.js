@@ -18,13 +18,4 @@ const connectDB = async () => {
     }
 }
 
-// try {
-  
-//   console.log('Successfully re-synced')
-// } catch (error) {
-//   console.log(error)
-// }
-
-
-
 module.exports = { connectDB, sequelize }

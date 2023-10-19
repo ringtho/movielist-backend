@@ -1,7 +1,6 @@
 const { StatusCodes } = require("http-status-codes")
 const Movie = require("../models/movies")
 const { NotFoundError, BadRequestError } = require("../errors")
-const cloudinary = require('../utils/cloudinary')
 const upload = require('../utils/multer')
 
 // Returns movies with pagination - size = 10
@@ -35,19 +34,12 @@ const getMovies = async (req, res) => {
 }
 
 const createMovie = async (req, res) => {
-//   const errors  = validationResult(req.body)
-//   console.log(errors)
-//   if (errors.isEmpty()){
-    // const result = await cloudinary.uploader.upload(req?.file?.path)
     const data = req.body
     data.createdBy = req.user.id
-    // data.thumbnail = result.secure_url
-    // data.cloudinaryId = result.public_id
+    data.thumbnail = req.file?.path || ''
+    console.log(data)
     const movie = await Movie.create(data)
-    res.status(StatusCodes.OK).json({ movie, success: true })
-//   }
-//   res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array()})
-  
+    res.status(StatusCodes.CREATED).json({ movie, success: true })
 }
 
 const getSingleMovie = async (req, res) => {

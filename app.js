@@ -4,7 +4,6 @@ const express = require('express')
 const cors = require('cors')
 const { connectDB } = require('./db/connectDB')
 
-
 const app = express()
 
 // Routers
@@ -22,6 +21,9 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 app.use(express.json())
+
+// Makes the images folder public
+app.use('/api/v1/images', express.static('images'))
 
 
 app.use('/api/v1/auth', authRouter)

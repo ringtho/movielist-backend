@@ -15,8 +15,8 @@ const errorHandler = (err, req, res, next) => {
     }
 
     if (
-      err.errors[0].type === 'Validation error' ||
-      err.errors[0].type === 'notNull Violation'
+      err?.errors[0]?.type === 'Validation error' ||
+      err?.errors[0]?.type === 'notNull Violation'
     ) {
       const name = err?.errors[0].path
       return res.status(StatusCodes.BAD_REQUEST).json({
