@@ -57,12 +57,12 @@ app.use(notFoundMiddleware)
 const PORT = process.env.PORT || 5050
 const start = async () => {
     try {
-        await connectDB()
-        app.listen(PORT, () => {
-          console.log(`Server listening on port ${PORT}`)
-        })
+      await connectDB()
+      app.listen(PORT, () => {
+        console.log(`Server listening on port ${PORT}`)
+      })
     }catch (error) {
-        console.log(error)
+      console.log(error)
     }
 }
 
