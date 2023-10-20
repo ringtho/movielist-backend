@@ -29,9 +29,6 @@ const User = sequelize.define('user', {
     profileImg: {
         type: DataTypes.STRING
     },
-    cloudinaryId: {
-        type: DataTypes.STRING
-    }
 })
 
 User.beforeCreate(async (user) => {
