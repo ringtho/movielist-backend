@@ -1,9 +1,13 @@
 require('dotenv').config()
 require('express-async-errors')
-const express = require('express')
-const cors = require('cors')
-const { connectDB } = require('./db/connectDB')
 
+const { connectDB } = require('./db/connectDB')
+const xss = require('xss-clean')
+const rateLimiter = require('express-rate-limit')
+const helmet = require('helmet')
+const cors = require('cors')
+
+const express = require('express')
 const app = express()
 
 // Routers
@@ -16,10 +20,21 @@ const notFoundMiddleware = require('./middleware/not-found')
 const errorHandler = require('./middleware/error-handler')
 const authMiddleware = require('./middleware/authentication')
 
+// Security packages (middlewares)
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  })
+)
 const corsOptions = {
   origin: 'http://localhost:3000'
 }
 app.use(cors(corsOptions))
+app.use(xss())
+app.use(helmet())
 app.use(express.json())
 
 // Makes the images folder public
@@ -35,7 +50,6 @@ app.get('/', (req, res) => {
 
 app.use(errorHandler)
 app.use(notFoundMiddleware)
-
 
 /**
  * Function to connect to DB and start the server
