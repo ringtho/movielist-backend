@@ -132,7 +132,10 @@ const updateFavorite = async (req, res) => {
   } = req
   const favorited = req.body.favorited
   if (JSON.stringify(req.body) === '{}') {
-    throw new BadRequestError('Please provide the favorite option')
+    throw new BadRequestError('Please provide the favorite status')
+  }
+  if (!favorited) {
+    throw new BadRequestError('Please provide the favorite status')
   }
   const [rowCount] = await Movie.update(
     { favorited },
