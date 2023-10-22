@@ -63,10 +63,7 @@ const updateUserDetails = async (req, res) => {
     if (rowCount === 0) {
       throw new BadRequestError('Please provide a name or thumbnail')
     }
-    const user = await User.findOne({
-      where: { id },
-      attributes: { exclude: ['password', 'id'] },
-    })
+    const user = await checkUserExists(id)
     res.status(StatusCodes.OK).json({ 
         msg: 'Successfully updated the user profile', 
         user, 
