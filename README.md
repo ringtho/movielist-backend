@@ -103,8 +103,9 @@ The MovieReel Database API offers a range of endpoints to interact with the syst
 
 To access protected routes, the API uses bearer token authentication. You need to include a valid JSON Web Token (JWT) in the `Authorization` header of your requests.
 
-#### Example:
+#### Examples:
 
+##### Retrive user details
 ```http
 GET /api/v1/user
 Authorization: Bearer your-jwt-token
