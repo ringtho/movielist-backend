@@ -141,11 +141,14 @@ const updateFavorite = async (req, res) => {
     user: { id: userId },
     params: { id },
   } = req
-  const favorited = req.body.favorited
-  if (JSON.stringify(req.body) === '{}') {
-    throw new BadRequestError('Please provide the favorite status')
+  const movie = await Movie.findOne({
+    where: { id: parseInt(id), createdBy: userId },
+  })
+  if (!movie) {
+    throw new NotFoundError(`Movie with id ${id} not found`)
   }
-  if (!favorited) {
+  const { favorited } = req.body
+  if (JSON.stringify(req.body) === '{}') {
     throw new BadRequestError('Please provide the favorite status')
   }
   const [rowCount] = await Movie.update(
@@ -153,7 +156,7 @@ const updateFavorite = async (req, res) => {
     { where: { id: parseInt(id), createdBy: userId } }
   )
   if (rowCount === 0) {
-    throw new NotFoundError(`Movie with id ${id} not found`)
+    throw new BadRequestError('Please provide the favorite status')
   }
   res.status(StatusCodes.OK).json({ 
     msg: `Updated the favorite status of movie with id: ${id}`, 
