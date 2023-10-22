@@ -7,11 +7,12 @@ Welcome to the MovieReel Database API documentation. This API provides access to
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Installation](#installation)
-- [Authentication](#authentication)
-- [Endpoints](#endpoints)
-- [API Documentation](#api-documentation)
 - [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Endpoints](#endpoints)
+- [Authentication](#authentication)
+- [API Documentation](#api-documentation)
 - [Contributing](#contributing)
 - [Contact](#contact)
 
