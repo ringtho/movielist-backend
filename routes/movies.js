@@ -7,6 +7,7 @@ const {
     deleteMovie, 
     getMovies,
     updateFavorite,
+    getFavoriteMovies,
     deleteMovieThumbnail 
 } = require('../controllers/movies')
 const router = express.Router()
@@ -17,6 +18,7 @@ router.route('/')
   .post(upload.single('image'), createMovie)
 
 router.get('/all', getMovies)
+router.get('/favorite', getFavoriteMovies)
 
 router.route('/:id')
     .get(getSingleMovie)

@@ -28,12 +28,23 @@ const getAllMovies = async (req, res) => {
 }
 
 /**
- * Returns all movies with no pagination 
+ * Returns all movies created by user 
  */
 const getMovies = async (req, res) => {
   const { id } = req.user
   const movies = await Movie.findAll({ 
       where: { createdBy: id },
+    })
+  res.status(StatusCodes.OK).json({ movies, success: true })
+}
+
+/**
+ * Returns all favorite movies created by user 
+ */
+const getFavoriteMovies = async (req, res) => {
+  const { id } = req.user
+  const movies = await Movie.findAll({ 
+      where: { createdBy: id, favorited: true },
     })
   res.status(StatusCodes.OK).json({ movies, success: true })
 }
@@ -183,5 +194,6 @@ module.exports = {
     deleteMovie,
     getMovies,
     updateFavorite,
-    deleteMovieThumbnail
+    deleteMovieThumbnail,
+    getFavoriteMovies
 }
