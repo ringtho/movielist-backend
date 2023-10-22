@@ -1,0 +1,459 @@
+openapi: 3.0.0
+info:
+  title: MovieReel Database
+  description: Movie Reel is a comprehensive movie database API that allows you to access and manage movie-related information. With a set of well-defined endpoints, it simplifies the process of retrieving, creating, updating, and deleting movie records. Users can also interact with their profiles, making it a versatile tool for movie enthusiasts and administrators.
+  contact:
+    name: Smith Ringtho
+    email: sringtho@gmail.com
+  version: '1.0'
+servers:
+- url: http://127.0.0.1:5050/api/v1
+  description: Development
+- url: https://movie-sringtho-8352b0c3e296.herokuapp.com/api/v1
+  description: Production
+paths:
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: User Login
+      description: This endpoint handles user login
+      operationId: UserLogin
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserLoginRequest'
+              - example:
+                  email: jdoe@email.com
+                  password: password
+            example:
+              email: jdoe@email.com
+              password: password
+        required: true
+      responses:
+        '201':
+          description: 'Login successful'
+          headers: {}
+      security: []
+  /auth/register:
+    post:
+      tags:
+      - Auth
+      summary: User Register
+      description: This endpoints handles new user registration
+      operationId: UserRegister
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserRegisterRequest'
+              - example:
+                  name: John Doe
+                  email: jdoe@email.com
+                  password: password
+            example:
+                name: John Doe
+                email: jdoe@email.com
+                password: password
+        required: true
+      responses:
+        '201':
+          description: 'Successfully added a new user'
+      security: []
+  /user:
+    get:
+      tags:
+      - Users
+      summary: Get User
+      operationId: GetUser
+      parameters: []
+      responses:
+        '200':
+          description: 'Successfully returned user details/ profile'
+          headers: {}
+      security:
+      - bearer: []
+  /user/update-password:
+    patch:
+      tags:
+      - Users
+      summary: Update Password
+      operationId: UpdatePassword
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdatePasswordRequest'
+              - example:
+                  oldPassword: password
+                  password: Secret
+            example:
+              oldPassword: password
+              password: Secret
+        required: true
+      responses:
+        '200':
+          description: 'Successfully updated user password'
+          headers: {}
+      security:
+      - bearer: []
+  /user/update:
+    patch:
+      tags:
+      - Users
+      summary: Update Name and Profile Img
+      operationId: UpdateNameandProfileImg
+      parameters: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                profileImg:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '200':
+          description: 'Successfully updated user details'
+      security:
+      - bearer: []
+  /movies:
+    post:
+      tags:
+      - Movies
+      summary: Create Movie
+      operationId: CreateMovie
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                genre:
+                  type: string
+                plot:
+                  type: string
+                notes:
+                  type: string
+                releaseDate:
+                  type: string
+                  format: date
+                rating:
+                  type: number 
+                favorited:
+                  type: boolean
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: 'Movie Created Successfully'
+          headers: {}
+      security:
+      - bearer: []
+    get:
+      tags:
+      - Movies
+      summary: Get All Movies Pagination
+      operationId: GetAllMoviesPagination
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination.
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: Number of items per page.
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /movies/all:
+    get:
+      tags:
+      - Movies
+      summary: Get All Movies created by the user
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /movies/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: The movie ID
+    get:
+      tags:
+      - Movies
+      summary: Get Movie by Id
+      operationId: GetMoviebyId
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    put:
+      tags:
+      - Movies
+      summary: Update Movie
+      operationId: UpdateMovie
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                genre:
+                  type: string
+                plot:
+                  type: string
+                notes:
+                  type: string
+                releaseDate:
+                  type: string
+                  format: date
+                rating:
+                  type: number 
+                favorited:
+                  type: boolean
+                thumbnail:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: 'Successfully updated the movie'
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    delete:
+      tags:
+      - Movies
+      summary: Delete Movie
+      operationId: DeleteMovie
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /movies/favorite:
+    get:
+      tags:
+      - Movies
+      summary: Get Favorite Movies
+      operationId: GetFavoriteMovies
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /movies/{id}/image:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: The movie ID
+    delete:
+      tags:
+      - Movies
+      summary: Delete Thumbnail
+      operationId: DeleteThumbnail
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /movies/{id}/favorite:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: The movie ID
+    patch:
+      tags:
+      - Movies
+      summary: Update Favorite
+      operationId: UpdateFavorite
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - example:
+                  favorited: true
+            example:
+              favorited: true
+      deprecated: false
+      security:
+      - bearer: []
+components:
+  schemas:
+    UserLoginRequest:
+      title: UserLoginRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: sringtho20@gmail.com
+        password: Sr123456
+    UserRegisterRequest:
+      title: UserRegisterRequest
+      required:
+      - name
+      - email
+      - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: Smith Ringtho
+        email: sringtho20@gmail.com
+        password: Sr123456
+    UpdatePasswordRequest:
+      title: UpdatePasswordRequest
+      required:
+      - oldPassword
+      - password
+      type: object
+      properties:
+        oldPassword:
+          type: string
+        password:
+          type: string
+      example:
+        oldPassword: Sr1234567
+        password: Sr123456
+    UpdateNameandProfileImgRequest:
+      title: UpdateNameandProfileImgRequest
+      required:
+      - olds
+      type: object
+      properties:
+        olds:
+          type: string
+      example:
+        olds: is golds
+    UpdateMovieRequest:
+      title: UpdateMovieRequest
+      required:
+      - title
+      - genre
+      - plot
+      - releaseDate
+      - createdBy
+      - rating
+      - notes
+      - thumbnail
+      type: object
+      properties:
+        title:
+          type: string
+        genre:
+          type: string
+        plot:
+          type: string
+        releaseDate:
+          type: string
+        createdBy:
+          type: integer
+          format: int32
+        rating:
+          type: number
+        notes:
+          type: string
+        thumbnail:
+          type: string
+          nullable: true
+      example:
+        title: The Hostel
+        genre: Comedy
+        plot: A ugandan hostel Group
+        releaseDate: 2000-05-05
+        createdBy: 1
+        rating: 4.2
+        notes: What do you think?
+        thumbnail: null
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+- name: Auth
+- name: Users
+- name: Movies

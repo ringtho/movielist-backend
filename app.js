@@ -38,7 +38,22 @@ app.use(express.json())
 // Makes the images folder public
 app.use('/api/v1/images', express.static('images'))
 
+const swaggerUI = require('swagger-ui-express')
+const YAML = require('yamljs')
+const swaggerDocument = YAML.load('./swagger.yaml')
 
+app.get('/', (req, res) => {
+  res.send(`
+  <h1>MovieReel API</h1>
+  <p>
+  Check out the 
+  <a href='/api-docs'>Documentation</a>
+  </p>
+  
+  `)
+})
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/user', authMiddleware, usersRouter)
 app.use('/api/v1/movies', authMiddleware, moviesRouter)
