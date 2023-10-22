@@ -26,6 +26,8 @@
     "mysql2": "^3.6.1",
     "sequelize": "^6.33.0",
     "sharp": "^0.32.6",
-    "xss-clean": "^0.1.4"
+    "swagger-ui-express": "^5.0.0",
+    "xss-clean": "^0.1.4",
+    "yamljs": "^0.3.0"
   }
 }
