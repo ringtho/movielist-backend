@@ -51,7 +51,7 @@ npm install
 - Create a MySQL database for the project.
 - Update the database configuration in the project. Create a .env file and update the following values with your MySQL database information:
 ``` bash
-DBHOST=localhost
+DBHOST=127.0.0.1
 DBUSER=your_mysql_username
 DBPASSWORD=your_mysql_password
 DBNAME=your_database_name
