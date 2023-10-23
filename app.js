@@ -46,7 +46,18 @@ app.get('/', (req, res) => {
   res.send(`
   <h1>MovieReel API</h1>
   <p>
-  Check out the 
+  Check out the endpoints: 
+  <a href='/api-docs'>Documentation</a>
+  </p>
+  
+  `)
+})
+
+app.get('/api/v1', (req, res) => {
+  res.send(`
+  <h1>MovieReel API</h1>
+  <p>
+  Check out the Endpoints:  
   <a href='/api-docs'>Documentation</a>
   </p>
   

@@ -12,7 +12,7 @@ const sequelize = new Sequelize(
 const connectDB = async () => {
     try {
         await sequelize.authenticate()
-        await sequelize.sync()
+        await sequelize.sync({ force: false })
     } catch (error) {
         console.log(error)
     }
