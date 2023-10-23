@@ -7,6 +7,6 @@ router.route('/')
     .get(getUser)
 
 router.patch('/update-password', updatePassword)
-router.patch('/update', upload.single('image'), updateUserDetails)
+router.patch('/update', upload.single('thumbnail'), updateUserDetails)
 
 module.exports = router
