@@ -20,11 +20,11 @@ const checkMovieExists = async(movie_id, userId) => {
 
 
 /**
- * Returns all movies returning 10 movies 
+ * Returns all movies returning 10 movies by default
  */
 const getAllMovies = async (req, res) => {
     const { id } = req.user
-    const size = +req.query.size || 0
+    const size = +req.query.size || 10
     const page = +req.query.page || 0
     if (isNaN(page)) {
       throw new BadRequestError('Page number should be a Number')
