@@ -1,6 +1,5 @@
 # MovieReel Database
-
-Welcome to the MovieReel Database API documentation. This API provides access to a comprehensive movie database, allowing you to manage movie-related information. With well-defined endpoints, it simplifies the process of retrieving, creating, updating, and deleting movie records. Users can also interact with their profiles, making it a versatile tool for movie enthusiasts and administrators.
+MovieReel Database API provides access to a comprehensive movie database, allowing you to manage movie-related information. With well-defined endpoints, it simplifies the process of retrieving, creating, updating, and deleting movie records. Users can also interact with their profiles, making it a versatile tool for movie enthusiasts and administrators.
 
 **Access the live API**: [MovieReel API - Heroku](https://movie-sringtho-8352b0c3e296.herokuapp.com)
 
@@ -48,7 +47,7 @@ cd movielist-backend
 npm install
 ```
 
-#### Configure MySQL Database
+#### Configure MySQL Database and JWT
 - Create a MySQL database for the project.
 - Update the database configuration in the project. Create a .env file and update the following values with your MySQL database information:
 ``` bash
@@ -56,6 +55,11 @@ DBHOST=localhost
 DBUSER=your_mysql_username
 DBPASSWORD=your_mysql_password
 DBNAME=your_database_name
+```
+- Also add the JWT secret key and JWT duration time. You can use this [key Generator](https://randomkeygen.com/) to generate a secret key
+``` bash
+JWT_SECRET=your_jwt_key
+JWT_DURATION=eg 30d
 ```
 
 #### Start the server
