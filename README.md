@@ -129,7 +129,7 @@ Content-Type: application/json
 
 ## API Documentation
 
-For detailed information on each endpoint, request and response examples, and authentication, please refer to the [API Documentation](https://movie-sringtho-8352b0c3e296.herokuapp.com/api-docs/).
+For detailed information on each endpoint, request and response examples, and authentication, please refer to the [API Documentation](https://movie-sringtho-8352b0c3e296.herokuapp.com/api-docs/). Once on the documentation, change the server to the production url in the dropdown labeled Servers. 
 
 ## Contributing
 
