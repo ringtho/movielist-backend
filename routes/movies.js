@@ -15,14 +15,14 @@ const upload = require('../utils/multer')
 
 router.route('/')
   .get(getAllMovies)
-  .post(upload.single('image'), createMovie)
+  .post(upload.single('thumbnail'), createMovie)
 
 router.get('/all', getMovies)
 router.get('/favorite', getFavoriteMovies)
 
 router.route('/:id')
     .get(getSingleMovie)
-    .put(upload.single('image'), updateMovie)
+    .put(upload.single('thumbnail'), updateMovie)
     .delete(deleteMovie)
 
 router.route('/:id/image')

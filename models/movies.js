@@ -20,15 +20,15 @@ const Movie = sequelize.define('movie', {
     type: DataTypes.TEXT,
     allowNull: false,
     validate: {
-        notEmpty: true,
-    }
+      notEmpty: true,
+    },
   },
   releaseDate: {
     type: DataTypes.DATEONLY,
     allowNull: false,
     validate: {
-        notEmpty: true,
-    }
+      notEmpty: true,
+    },
   },
   createdBy: {
     type: DataTypes.INTEGER,
@@ -39,6 +39,7 @@ const Movie = sequelize.define('movie', {
   },
   notes: {
     type: DataTypes.TEXT,
+    defaultValue: '',
   },
   thumbnail: {
     type: DataTypes.STRING,
@@ -47,7 +48,7 @@ const Movie = sequelize.define('movie', {
   favorited: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
-  }
+  },
 })
 
 // Movie.sync({ force: true })

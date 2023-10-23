@@ -4,6 +4,22 @@ const { NotFoundError, BadRequestError } = require("../errors")
 const fs = require('fs')
 
 /**
+ * Reusable function to Check if a movie exists
+ * Returns the movie if found
+ */
+
+const checkMovieExists = async(movie_id, userId) => {
+  const movie = await Movie.findOne({
+    where: { id: parseInt(movie_id), createdBy: userId },
+  })
+  if (!movie) {
+    throw new NotFoundError(`Movie with id ${movie_id} not found`)
+  }
+  return movie
+}
+
+
+/**
  * Returns all movies returning 10 movies 
  */
 const getAllMovies = async (req, res) => {
@@ -67,41 +83,8 @@ const createMovie = async (req, res) => {
  */
 const getSingleMovie = async (req, res) => {
   const { user: { id: userId }, params: { id }} = req
-  const movie = await Movie.findOne({ 
-    where: { id: parseInt(id), createdBy: userId }
-  })
-  if (!movie) {
-    throw new NotFoundError(`Movie with id ${id} not found`)
-  }
+  const movie = await checkMovieExists(id, userId)
   res.status(StatusCodes.OK).json({ movie, success: true })
-}
-
-/**
- * Deletes a movie thumbnail
- */
-const deleteMovieThumbnail = async (req, res) => {
-  const {
-    user: { id: userId },
-    params: { id },
-  } = req
-  const movie = await Movie.findOne({
-    where: { id: parseInt(id), createdBy: userId },
-  })
-  if (!movie) {
-    throw new NotFoundError(`Movie with id ${id} not found`)
-  }
-  fs.unlink(movie.thumbnail, (error) => {
-    if (error) console.log(error)
-  })
-  await Movie.update(
-    { thumbnail: null}, 
-    { where: { id: parseInt(id), createdBy: userId } 
-  })
-
-  res.status(StatusCodes.OK).json({ 
-    msg: "Successfully removed the thumbnail", 
-    success: true 
-  })
 }
 
 /**
@@ -110,23 +93,25 @@ const deleteMovieThumbnail = async (req, res) => {
  */
 const updateMovie = async (req, res) => {
   const { user: { id: userId }, params: { id }} = req
-  if (JSON.stringify(req.body) === '{}') {
+  if ((JSON.stringify(req.body) === '{}' && !req.file) || !req.body) {
     throw new BadRequestError('Please provide a field to update')
   }
+  const movieDetails = await checkMovieExists(id, userId)
   const data = req.body
-  if (req.file?.path) {
-    fs.unlink(data.thumbnail, (error) => {
-      if (error) console.log(error)
-    })
-    data.thumbnail = req.file?.path
-  } else if (req.body.thumbnail === "null") {
-    data.thumbnail = null
+  if (req?.file) {
+    if (movieDetails.thumbnail !== null) {
+      fs.unlink(movieDetails?.thumbnail, (error) => {
+        if (error) console.log(error)
+      })
+    }
+    data.thumbnail = req?.file?.path
   }
   const [rowCount] = await Movie.update(
     data, 
     { where: { id: parseInt(id), createdBy: userId }})
   if(rowCount === 0) {
-    throw new NotFoundError(`Movie with id ${id} not found`)
+    throw new BadRequestError(
+      `Please provide either a title, genre, plot, releaseDate, rating, notes, favorited or a thumbnail`)
   }
   const movie = await Movie.findOne({ where: { id } })
   res.status(StatusCodes.OK).json({ movie, success: true })
@@ -141,12 +126,7 @@ const updateFavorite = async (req, res) => {
     user: { id: userId },
     params: { id },
   } = req
-  const movie = await Movie.findOne({
-    where: { id: parseInt(id), createdBy: userId },
-  })
-  if (!movie) {
-    throw new NotFoundError(`Movie with id ${id} not found`)
-  }
+  await checkMovieExists(id, userId)
   const { favorited } = req.body
   if (JSON.stringify(req.body) === '{}') {
     throw new BadRequestError('Please provide the favorite status')
@@ -169,12 +149,7 @@ const updateFavorite = async (req, res) => {
  */
 const deleteMovie = async (req, res) => {
   const { user: { id: userId }, params: { id }} = req
-  const movie = await Movie.findOne({
-    where: { id: parseInt(id), createdBy: userId },
-  })
-  if (!movie) {
-    throw new NotFoundError(`Movie with id ${id} not found`)
-  }
+  const movie = await checkMovieExists(id, userId)
   if(movie.thumbnail) {
      fs.unlink(movie.thumbnail, (error) => {
        if (error) console.log(error)
@@ -184,7 +159,36 @@ const deleteMovie = async (req, res) => {
     where: { id: parseInt(id) , createdBy: userId }
   })
   res.status(StatusCodes.OK).json({ 
-    msg: `Successfully deleted movie with id ${id}`, 
+    msg: `Successfully deleted movie with id ${id}`,
+    data: null,
+    success: true 
+  })
+}
+
+/**
+ * Deletes a movie thumbnail
+ */
+const deleteMovieThumbnail = async (req, res) => {
+  const {
+    user: { id: userId },
+    params: { id },
+  } = req
+  const movie = await checkMovieExists(id, userId)
+  if(movie.thumbnail) {
+     fs.unlink(movie.thumbnail, (error) => {
+       if (error) console.log(error)
+     })
+  } else {
+    throw new NotFoundError(`Movie with id ${id} has no thumbnail`)
+  }
+  await Movie.update(
+    { thumbnail: null}, 
+    { where: { id: parseInt(id), createdBy: userId } 
+  })
+
+  res.status(StatusCodes.OK).json({ 
+    msg: "Successfully removed the thumbnail",
+    data: null,
     success: true 
   })
 }

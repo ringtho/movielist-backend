@@ -159,7 +159,7 @@ paths:
                   type: number 
                 favorited:
                   type: boolean
-                image:
+                thumbnail:
                   type: string
                   format: binary
       responses:
@@ -258,8 +258,6 @@ paths:
                 favorited:
                   type: boolean
                 thumbnail:
-                  type: string
-                image:
                   type: string
                   format: binary
       responses:
