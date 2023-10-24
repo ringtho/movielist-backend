@@ -51,10 +51,12 @@ const updateUserDetails = async (req, res) => {
       data.name = req.body.name
     }
     if (req.file) {
+      if(userDetails.profileImg !== null){
         fs.unlink(userDetails.profileImg, (error) => {
-            if (error) console.log(error)
+          if (error) console.log(error)
         })
-        data.profileImg = req.file.path
+      }
+      data.profileImg = req.file.path
     }
     const [rowCount] = await User.update(data, {
       where: { id }
