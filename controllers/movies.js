@@ -106,6 +106,8 @@ const updateMovie = async (req, res) => {
       })
     }
     data.thumbnail = req.file.path
+  } else {
+    data.thumbnail = movieDetails.thumbnail
   }
   const [rowCount] = await Movie.update(
     data,
