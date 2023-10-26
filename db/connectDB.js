@@ -10,12 +10,12 @@ const sequelize = new Sequelize(
 )
 
 const connectDB = async () => {
-    try {
-        await sequelize.authenticate()
-        await sequelize.sync({ force: false })
-    } catch (error) {
-        console.log(error)
-    }
+  try {
+    await sequelize.authenticate()
+    await sequelize.sync({ force: false })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 module.exports = { connectDB, sequelize }

@@ -4,7 +4,7 @@ const router = express.Router()
 const upload = require('../utils/multer')
 
 router.route('/')
-    .get(getUser)
+  .get(getUser)
 
 router.patch('/update-password', updatePassword)
 router.patch('/update', upload.single('thumbnail'), updateUserDetails)

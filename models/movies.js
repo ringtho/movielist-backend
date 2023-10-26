@@ -6,51 +6,49 @@ const Movie = sequelize.define('movie', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      notEmpty: true,
-    },
+      notEmpty: true
+    }
   },
   genre: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      notEmpty: true,
-    },
+      notEmpty: true
+    }
   },
   plot: {
     type: DataTypes.TEXT,
     allowNull: false,
     validate: {
-      notEmpty: true,
-    },
+      notEmpty: true
+    }
   },
   releaseDate: {
     type: DataTypes.DATEONLY,
     allowNull: false,
     validate: {
-      notEmpty: true,
-    },
+      notEmpty: true
+    }
   },
   createdBy: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
   rating: {
-    type: DataTypes.FLOAT,
+    type: DataTypes.FLOAT
   },
   notes: {
     type: DataTypes.TEXT,
-    defaultValue: '',
+    defaultValue: ''
   },
   thumbnail: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: true
   },
   favorited: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
+    defaultValue: false
+  }
 })
-
-// Movie.sync({ force: true })
 
 module.exports = Movie
